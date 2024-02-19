@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../data/api/api_service.dart';
-import '../model/restaurants.dart';
-import '../provider/restaurant_provider.dart';
+import '../data/remote/api/api_service.dart';
+import '../domain/model/restaurants.dart';
+import '../domain/provider/restaurant_provider.dart';
 import '../res/colors.dart';
 import '../ui/page/detail_restaurant_screen.dart';
 
@@ -30,7 +30,7 @@ Widget buildRestaurantItem(BuildContext context, Restaurant restaurant) {
     title: Text(restaurant.name),
     subtitle: Row(
       children: [
-        const Icon(Icons.location_pin, color: ThemeColors.PRIMARY_COLOR),
+        const Icon(Icons.location_pin, color: ThemeColors.primaryColor),
         const SizedBox(width: 4),
         Text(restaurant.city),
       ],
@@ -38,7 +38,7 @@ Widget buildRestaurantItem(BuildContext context, Restaurant restaurant) {
     trailing: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(Icons.star, color: ThemeColors.ACCENT_COLOR),
+        const Icon(Icons.star, color: ThemeColors.accentColor),
         const SizedBox(width: 2),
         Text(restaurant.rating.toString()),
       ],

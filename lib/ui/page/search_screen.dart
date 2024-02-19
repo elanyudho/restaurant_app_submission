@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_app/provider/restaurant_provider.dart';
+import 'package:restaurant_app/domain/provider/restaurant_provider.dart';
 
-import '../../model/restaurants.dart';
+import '../../domain/model/restaurants.dart';
 import '../../res/colors.dart';
 import '../../widgets/item_list_widget.dart';
 
@@ -28,11 +28,13 @@ class _SearchScreenState extends State<SearchScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     CircleAvatar(
-                      backgroundColor: ThemeColors.ACCENT_COLOR,
+                      backgroundColor: ThemeColors.accentColor,
                       child: IconButton(
                         icon: const Icon(Icons.arrow_back, color: Colors.white),
                         onPressed: () {
                           Navigator.pop(context);
+                          Provider.of<RestaurantProvider>(context, listen: false)
+                              .clearStateSearch();
                         },
                       ),
                     ),
@@ -45,7 +47,8 @@ class _SearchScreenState extends State<SearchScreen> {
                           border: OutlineInputBorder(),
                           hintText: 'Search Restaurant',
                         ),
-                        onChanged: (String value) {
+                        onSubmitted
+                            : (String value) {
                           if (value == '') {
                             Provider.of<RestaurantProvider>(context,
                                     listen: false)
@@ -73,20 +76,20 @@ class _SearchScreenState extends State<SearchScreen> {
                           ),
                         );
                       } else {
-                        switch (state.state) {
+                        switch (state.stateSearch) {
                           case ResultState.loading:
                             return const Center(
                                 child: CircularProgressIndicator());
                           case ResultState.noData:
                             return Center(
                               child: Material(
-                                child: Text(state.message),
+                                child: Text(state.messageSearch),
                               ),
                             );
                           case ResultState.error:
                             return Center(
                               child: Material(
-                                child: Text(state.message),
+                                child: Text(state.messageSearch),
                               ),
                             );
                           case ResultState.hasData:

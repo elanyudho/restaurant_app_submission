@@ -30,7 +30,7 @@ class _InvisibleExpandedHeaderState extends State<InvisibleExpandedHeader> {
   }
 
   void _addListener() {
-    _position = Scrollable.of(context)?.position;
+    _position = Scrollable.of(context).position;
     _position?.addListener(_positionListener);
     _positionListener();
   }
@@ -55,19 +55,15 @@ class _InvisibleExpandedHeaderState extends State<InvisibleExpandedHeader> {
   Widget build(BuildContext context) {
     return Visibility(
       visible: _visible ?? false,
-      child: Expanded(
-        child: Container(
-          child: Row(
-            children: [
-              BackButton(
-                  color: Colors.white,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  }),
-              widget.child,
-            ],
-          ),
-        ),
+      child: Row(
+        children: [
+          BackButton(
+              color: Colors.white,
+              onPressed: () {
+                Navigator.of(context).pop();
+              }),
+          widget.child,
+        ],
       )
     );
   }

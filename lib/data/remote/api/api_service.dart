@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:restaurant_app/data/response/restaurant_detail.dart';
-import 'package:restaurant_app/data/response/restaurant_list.dart';
+import 'package:restaurant_app/data/remote/response/restaurant_detail.dart';
+import 'package:restaurant_app/data/remote/response/restaurant_list.dart';
 import 'package:http/http.dart' as http;
-import 'package:restaurant_app/data/response/restaurant_search.dart';
+import 'package:restaurant_app/data/remote/response/restaurant_search.dart';
 
 
 class ApiService {

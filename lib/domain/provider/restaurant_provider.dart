@@ -1,10 +1,9 @@
-
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/data/api/api_service.dart';
-import 'package:restaurant_app/data/response/restaurant_search.dart';
+import 'package:restaurant_app/data/remote/api/api_service.dart';
+import 'package:restaurant_app/data/remote/response/restaurant_detail.dart';
+import 'package:restaurant_app/data/remote/response/restaurant_list.dart';
+import 'package:restaurant_app/data/remote/response/restaurant_search.dart';
 
-import '../data/response/restaurant_detail.dart';
-import '../data/response/restaurant_list.dart';
 
 enum ResultState {loading, noData, hasData, error }
 
@@ -22,101 +21,117 @@ class RestaurantProvider extends ChangeNotifier {
 
   bool _isEmptyValue = true;
 
-  ResultState _state = ResultState.noData;
-  String _message = '';
+  ResultState _stateHome = ResultState.noData;
+  ResultState _stateSearch = ResultState.noData;
+  ResultState _stateDetail = ResultState.noData;
+
+  String _messageHome = '';
+  String _messageSearch = '';
+  String _messageDetail = '';
 
   RestaurantListResult get restaurantListResult => _restaurantListResult;
   RestaurantDetailResult get restaurantDetailResult => _restaurantDetailResult;
   RestaurantSearchResult get restaurantSearch => _restaurantSearchResult;
   bool get isEmptyValue => _isEmptyValue;
 
-  ResultState get state => _state;
-  String get message => _message;
+  ResultState get stateHome => _stateHome;
+  ResultState get stateSearch => _stateSearch;
+  ResultState get stateDetail => _stateDetail;
+
+  String get messageHome => _messageHome;
+  String get messageSearch => _messageSearch;
+  String get messageDetail => _messageDetail;
 
   Future <dynamic> _getRestaurantList() async {
     try {
-      _state = ResultState.loading;
+      _stateHome = ResultState.loading;
       notifyListeners();
       final restaurants = await apiService.getRestaurants();
 
       if (restaurants.error) {
-        _state = ResultState.error;
+        _stateHome = ResultState.error;
         notifyListeners();
-        return _message = restaurantListResult.message;
+        return _messageHome = restaurantListResult.message;
       }
 
       if (restaurants.restaurants.isEmpty) {
-        _state = ResultState.noData;
+        _stateHome = ResultState.noData;
         notifyListeners();
-        return _message = restaurantListResult.message;
+        return _messageHome = restaurantListResult.message;
       }
 
-      _state = ResultState.hasData;
+      _stateHome = ResultState.hasData;
       notifyListeners();
       return _restaurantListResult = restaurants;
 
     } catch(e) {
-      _state = ResultState.error;
+      _stateHome = ResultState.error;
       notifyListeners();
-      return _message = 'Gagal Terhubung ke Server';
+      return _messageHome = 'Gagal Terhubung ke Server';
     }
   }
 
   Future <dynamic> getRestaurantSearch(String query) async {
     try {
-      _state = ResultState.loading;
+      _stateSearch = ResultState.loading;
       notifyListeners();
       final data = await apiService.getRestaurantSearch(query);
 
       if (data.error == true) {
-        _state = ResultState.error;
+        _stateSearch = ResultState.error;
         notifyListeners();
-        return _message = "Terjadi Kesalahan. Silahkan Coba Lagi Nanti";
+        return _messageSearch = "Terjadi Kesalahan. Silahkan Coba Lagi Nanti";
       }
 
       if (data.restaurants?.isEmpty == true) {
-        _state = ResultState.noData;
+        _stateSearch = ResultState.noData;
         notifyListeners();
-        return _message = "Data Tidak Ditemukan";
+        return _messageSearch = "Data Tidak Ditemukan";
       }
 
-      _state = ResultState.hasData;
+      _stateSearch = ResultState.hasData;
       notifyListeners();
       return _restaurantSearchResult = data;
 
     } catch(e) {
-      _state = ResultState.error;
+      _stateSearch = ResultState.error;
       notifyListeners();
-      return _message = 'Gagal Terhubung ke Server';
+      return _messageSearch = 'Gagal Terhubung ke Server';
     }
   }
 
   Future <dynamic> getRestaurantDetail(String id) async {
     try {
-      _state = ResultState.loading;
+      _stateDetail = ResultState.loading;
       notifyListeners();
       final restaurant = await apiService.getDetailRestaurant(id);
 
       if (restaurant.error) {
-        _state = ResultState.error;
+        _stateDetail = ResultState.error;
         notifyListeners();
-        return _message = restaurant.message;
+        return _messageDetail = restaurant.message;
       }
 
-      _state = ResultState.hasData;
+      _stateDetail = ResultState.hasData;
       notifyListeners();
       return _restaurantDetailResult = restaurant;
 
     } catch(e) {
-      _state = ResultState.error;
+      _stateDetail = ResultState.error;
       notifyListeners();
-      return _message = 'Gagal Terhubung ke Server';
+      return _messageDetail = 'Gagal Terhubung ke Server';
     }
   }
 
   setSearchScreenViewState(bool isEmptyValue) {
       _isEmptyValue = isEmptyValue;
       notifyListeners();
+  }
+
+  clearStateSearch() {
+    _isEmptyValue = true;
+    _stateSearch = ResultState.noData;
+    notifyListeners();
   }
 
 }
